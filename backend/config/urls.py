@@ -2,15 +2,23 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
-from django.http import HttpResponse
+from django.http import JsonResponse
+
+def home(request):
+    return JsonResponse({
+        "status": "ok",
+        "message": "AI Job Portal Backend Running"
+    })
 
 urlpatterns = [
-       
-    path('admin/', admin.site.urls),
-    path('api/', include('jobs.urls')),
-    path('api/', include('accounts.urls')),
-    path('api-auth/', include('rest_framework.urls')),
+    path("", home),
 
+    path("admin/", admin.site.urls),
+    path("api/", include("jobs.urls")),
+    path("api/", include("accounts.urls")),
 ]
 
-urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)    
+urlpatterns += static(
+    settings.MEDIA_URL,
+    document_root=settings.MEDIA_ROOT
+)
