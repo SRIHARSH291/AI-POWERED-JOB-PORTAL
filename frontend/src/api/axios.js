@@ -1,9 +1,7 @@
 import axios from "axios";
 
-const API = axios.create({
-  baseURL: "http://127.0.0.1:8000/api",
-  timeout: 15000,
-});
+const API =
+"https://ai-powered-job-portal-production.up.railway.app/api";
 
 // 🔥 REQUEST INTERCEPTOR (ADD TOKEN)
 API.interceptors.request.use((config) => {
