@@ -163,7 +163,11 @@ X_FRAME_OPTIONS = "ALLOWALL"
 # Render Production Settings
 # =========================
 
-STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
+STORAGES = {
+    "staticfiles": {
+        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+    },
+}
 
 CSRF_TRUSTED_ORIGINS = [
     "https://ai-powered-job-portal-production.up.railway.app",
