@@ -664,23 +664,29 @@ class JobViewSet(viewsets.ModelViewSet):
     ]
 
     def get_queryset(self):
-        user = self.request.user
+    user = self.request.user
 
-        # Recruiter → only own jobs
-        if user.user_type == "recruiter":
-            return Job.objects.filter(
-                recruiter=user
-            ).order_by("-created_at")
-
-        # Admin → all jobs
-        if user.user_type == "admin" or user.is_staff:
-            return Job.objects.all().order_by("-created_at")
-
-        # Job seekers → only open jobs
+    # Anonymous user
+    if not user.is_authenticated:
         return Job.objects.filter(
             status="open"
         ).order_by("-created_at")
 
+    # Recruiter
+    if getattr(user, "user_type", None) == "recruiter":
+        return Job.objects.filter(
+            recruiter=user
+        ).order_by("-created_at")
+
+    # Admin
+    if getattr(user, "user_type", None) == "admin" or user.is_staff:
+        return Job.objects.all().order_by("-created_at")
+
+    # Job Seeker
+    return Job.objects.filter(
+        status="open"
+    ).order_by("-created_at")
+    
     def get_permissions(self):
         if self.action == "create":
             return [IsAuthenticated(), IsRecruiter()]
@@ -737,7 +743,6 @@ class JobViewSet(viewsets.ModelViewSet):
     # ==========================================================
     # DELETE
     # ==========================================================
-    def perform_destroy(self, instance):
         user = self.request.user
 
         # ✅ Admin can delete any job
