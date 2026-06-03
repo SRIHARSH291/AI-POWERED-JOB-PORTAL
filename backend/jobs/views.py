@@ -648,9 +648,6 @@ def recruiter_performance(request):
 # =========================================================
 # JOB VIEWSET
 # =========================================================
-
-# views.py
-
 class JobViewSet(viewsets.ModelViewSet):
     queryset = Job.objects.all().order_by("-created_at")
     serializer_class = JobSerializer
@@ -662,6 +659,11 @@ class JobViewSet(viewsets.ModelViewSet):
         "job_type",
         "salary",
     ]
+
+    def get_permissions(self):
+    if self.action in ["list", "retrieve"]:
+        return [AllowAny()]
+    return [IsAuthenticated()]
 
     def get_queryset(self):
     user = self.request.user
